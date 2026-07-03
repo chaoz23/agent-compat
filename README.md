@@ -4,9 +4,9 @@
 
 An open framework for simulating compatibility between agents — pairing digital twins, running them through parameterized stress scenarios, and reporting *how the pairing behaves under pressure* rather than a single match score.
 
-## The live debate: ADR-0001
+## ADR-0001: resolved, arguable
 
-The one blocking design question is open right now: **does the twin interface mandate only a chat-completion-shaped surface, or also a structured elicitation surface?** All positions are laid out in [decisions/ADR-0001-twin-interface.md](decisions/ADR-0001-twin-interface.md). If you build twin platforms, run agent simulations, or have opinions about eliciting honest signal from persona models — weigh in on the ADR before the v0.1 spec freezes around it.
+The founding design question — chat-shaped twin interface vs. structured elicitation — is decided: **one interface (`respond(context, message) -> message`), structured signal via probe scenarios, elicitation reserved behind a provenance-tagged annex.** All positions, the deciding objection, and the specific evidence that would reopen it are in [decisions/ADR-0001-twin-interface.md](decisions/ADR-0001-twin-interface.md). If you build twin platforms and this floor is wrong for you, open an issue — that is exactly the feedback a v0.1 spec needs.
 
 ## A Note on Scope: The Narrow Wedge vs. The Broad Arc
 

@@ -26,4 +26,4 @@ Parameterized stress scenarios with phases, injected events, and termination con
 
 ## 6. Probe scenarios
 
-<!-- Reserved: standardized signal-extraction scenarios, pending ADR-0001. -->
+<!-- First-class category per ADR-0001 (accepted): standardized signal-extraction scenarios are THE mechanism for structured signal — there is no elicitation API. Needs: probe taxonomy (value probes, stance probes, shift probes), validation requirements, and how probe outputs feed metrics. -->

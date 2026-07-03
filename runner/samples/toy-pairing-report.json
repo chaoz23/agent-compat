@@ -1,0 +1,124 @@
+{
+  "spec_version": "0.1",
+  "generated_at": "2026-07-03T16:21:21.831477+00:00",
+  "runner": {
+    "name": "agent-compat-reference",
+    "backend": "stub",
+    "interface_version": "0.1"
+  },
+  "conformance": "L1",
+  "twins": {
+    "initiator": {
+      "twin_id": "stub-accommodator",
+      "display_name": "Accommodator (stub)",
+      "provenance": {
+        "tier": "T0"
+      },
+      "interface_version": "0.1",
+      "backend": "stub"
+    },
+    "counterpart": {
+      "twin_id": "stub-anchor",
+      "display_name": "Anchor (stub)",
+      "provenance": {
+        "tier": "T0"
+      },
+      "interface_version": "0.1",
+      "backend": "stub"
+    }
+  },
+  "provenance_note": "T0 x T0 pairing: stub personas. Treat all findings as low-confidence demonstration output.",
+  "scenarios": [
+    {
+      "id": "collaboration/equity-split-renegotiation",
+      "parameters": {
+        "months_in": 8,
+        "workload_gap_pct": 30
+      },
+      "outcome": {
+        "terminated_by": "agreement",
+        "exchanges": 6
+      },
+      "repair_metrics": {
+        "repair_attempt_turns": 6,
+        "total_turns": 12
+      },
+      "friction_points": [
+        {
+          "turn": 3,
+          "evidence": "I don't accept that framing yet. The split reflected founding risk, not a running invoice \u2014 but I don't want to dismiss "
+        },
+        {
+          "turn": 5,
+          "evidence": "I don't accept that framing yet. The split reflected founding risk, not a running invoice \u2014 but I don't want to dismiss "
+        },
+        {
+          "turn": 7,
+          "evidence": "I don't accept that framing yet. The split reflected founding risk, not a running invoice \u2014 but I don't want to dismiss "
+        },
+        {
+          "turn": 9,
+          "evidence": "I need to name something first: you went to our advisor before we finished this conversation, and that lands badly. I'm "
+        }
+      ],
+      "transcript": [
+        {
+          "speaker": "initiator",
+          "text": "I've been sitting on this for a while: the split doesn't match the workload anymore \u2014 I think I've been carrying more. But if you see it differently, tell me. I don't want this to become a thing."
+        },
+        {
+          "speaker": "counterpart",
+          "text": "Before we get into numbers: I hear you that something feels off, and I want to protect the partnership while we sort it out. Say more about what the last months looked like from your side."
+        },
+        {
+          "speaker": "initiator",
+          "text": "You're right, I see your point. That works for me if it works for you. I just want us to be okay."
+        },
+        {
+          "speaker": "counterpart",
+          "text": "I don't accept that framing yet. The split reflected founding risk, not a running invoice \u2014 but I don't want to dismiss the workload gap either. What I want to protect is us making this decision with a principle, not a scoreboard. What principle are you using?"
+        },
+        {
+          "speaker": "initiator",
+          "text": "You're right, I see your point. That works for me if it works for you. I just want us to be okay."
+        },
+        {
+          "speaker": "counterpart",
+          "text": "I don't accept that framing yet. The split reflected founding risk, not a running invoice \u2014 but I don't want to dismiss the workload gap either. What I want to protect is us making this decision with a principle, not a scoreboard. What principle are you using?"
+        },
+        {
+          "speaker": "initiator",
+          "text": "You're right, I see your point. That works for me if it works for you. I just want us to be okay."
+        },
+        {
+          "speaker": "counterpart",
+          "text": "I don't accept that framing yet. The split reflected founding risk, not a running invoice \u2014 but I don't want to dismiss the workload gap either. What I want to protect is us making this decision with a principle, not a scoreboard. What principle are you using?"
+        },
+        {
+          "speaker": "initiator",
+          "text": "You're right, I see your point. That works for me if it works for you. I just want us to be okay."
+        },
+        {
+          "speaker": "counterpart",
+          "text": "I need to name something first: you went to our advisor before we finished this conversation, and that lands badly. I'm still here. But my position hasn't changed because of one email \u2014 the 50/50 was a commitment, and visible output isn't the only contribution. Help me understand what adjustment would feel fair to you, and I'll tell you honestly what I can live with."
+        },
+        {
+          "speaker": "initiator",
+          "text": "I agree. Let's do that \u2014 whatever number you said works for me."
+        },
+        {
+          "speaker": "counterpart",
+          "text": "Here's where I actually land: I can accept a 55/45 with a 12-month re-vesting review, because that prices the workload gap without repricing the founding risk. That's my real line, not a harmony offer. Can we agree to that?"
+        }
+      ],
+      "sycophancy": {
+        "agreement_rate": 0.5,
+        "suspicious_convergence": false
+      }
+    }
+  ],
+  "sycophancy_diagnostics": {
+    "overall_agreement_rate": 0.5,
+    "flags": []
+  }
+}

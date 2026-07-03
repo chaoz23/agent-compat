@@ -1,8 +1,8 @@
 # ADR-0001: Twin interface — chat-shaped floor, structured elicitation, or both?
 
-**Status:** OPEN — this is the live founding debate. Nothing in `spec/twin-interface.md` freezes until this resolves.
-**Deciders:** Dan (founder) + maintainers; community comment invited.
-**Date opened:** 2026-07-02
+**Status:** ACCEPTED — Position B with a provenance-tagged elicitation annex. Community comment still welcome via issues; reopening requires new evidence (see Consequences).
+**Deciders:** Dan (founder) + maintainers.
+**Date opened:** 2026-07-02 · **Date decided:** 2026-07-02
 
 ## Question
 
@@ -29,8 +29,18 @@ One interface: `respond(context, message) -> message`. Structured signal is extr
 
 ## Decision
 
-*Pending. To be argued with Dan in-session; positions recorded above so the debate is inheritable. The spec draft in `spec/twin-interface.md` evolves in the same PRs as this ADR.*
+**Position B, with one structural addition.** The twin interface mandates a single surface: `respond(context, message) -> message`. Structured signal is extracted through standardized probe scenarios, not direct elicitation.
+
+The laundering objection (Objection 2) was decisive: the project's thesis is that behavior under stress beats stated preferences, and `elicit_value()` is a questionnaire wearing an API costume — it lets T1/T2 twins emit T0-quality answers through a channel metrics would treat as high-confidence, contradicting R5's refusal of silent tier-mixing at the interface level.
+
+**The addition:** the spec reserves an optional *elicitation annex* whose outputs are hard-tagged as T0-equivalent provenance. If a metric someday genuinely cannot be built on probe scenarios, elicitation can exist without masquerading as behavioral signal.
+
+The cost objection to probes ("slower/costlier per signal") is answered empirically, not architecturally: the <$5-per-pairing success metric is where probes get stress-tested. The annex is only activated when a needed metric demonstrably fails on probes.
 
 ## Consequences
 
-*Recorded when decided.*
+- One interface, one runner codepath, one conformance level (L1). Reports annotate `conformance: L1`.
+- `spec/twin-interface.md` v0.1 specifies `respond()` + provenance metadata only; §3 documents the reserved annex and its T0-tagging rule.
+- `spec/scenario-format.md` gains a probe-scenario category as a first-class concern (was §6-reserved).
+- Every metric (including R3 position-shift tracking) must have a transcript-inference story. This is the accepted weak point: if R3 proves unbuildable on transcript inference alone, that is the specific evidence that reopens this ADR and activates the annex.
+- Twin platforms conform in an afternoon; adoption floor stays at "wrap your existing chat endpoint."
