@@ -1,8 +1,4 @@
-import json
-
-import pytest
-
-from validate_report import r6_violations
+from agent_compat.validate_report import r6_violations
 
 
 def test_rejects_top_level_compatibility_score():

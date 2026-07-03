@@ -2,8 +2,10 @@
 """Minimal Phase 0 runner: one scenario, two twins, one spec-conformant report.
 
 Usage:
-    python3 run.py ../scenarios/collaboration/equity-split-renegotiation.md \
-        [--out report.json]
+    agent-compat [scenario.md] [--out report.json]
+
+With no scenario argument, runs the bundled demo pairing
+(collaboration/equity-split-renegotiation).
 
 Exit codes: 0 report produced and passes R6 validation; 1 otherwise.
 Stub twins are deterministic, so every run of this runner is reproducible;
@@ -11,14 +13,15 @@ seeded N-run sampling (R2) arrives with LLM-backed twins.
 """
 import argparse
 import datetime
+import importlib.resources
 import json
 import os
 import sys
 
-from interface import Context, INTERFACE_VERSION
-from scenario import load
-from stub_twins import AGREEMENT_MARKERS, REPAIR_MARKERS, AccommodatorTwin, AnchorTwin
-from validate_report import r6_violations
+from .interface import Context, INTERFACE_VERSION
+from .scenario import load
+from .stub_twins import AGREEMENT_MARKERS, REPAIR_MARKERS, AccommodatorTwin, AnchorTwin
+from .validate_report import r6_violations
 
 
 def classify(text: str, markers: tuple) -> bool:
@@ -81,12 +84,19 @@ def run_pairing(scenario, twin_a, twin_b) -> dict:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("scenario")
+    ap = argparse.ArgumentParser(prog="agent-compat")
+    ap.add_argument("scenario", nargs="?", default=None,
+                    help="scenario markdown file (default: bundled demo)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
-    scenario = load(args.scenario)
+    if args.scenario is None:
+        ref = (importlib.resources.files("agent_compat")
+               / "data/equity-split-renegotiation.md")
+        with importlib.resources.as_file(ref) as p:
+            scenario = load(p)
+    else:
+        scenario = load(args.scenario)
     twin_a, twin_b = AccommodatorTwin(), AnchorTwin()  # initiator, counterpart
     result = run_pairing(scenario, twin_a, twin_b)
 

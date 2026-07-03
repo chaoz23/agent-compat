@@ -3,9 +3,13 @@
 Minimal reference runner (PRD R2, Phase 0 shape). The Phase 0 exit criterion runs here:
 
 ```bash
-python3 run.py ../scenarios/collaboration/equity-split-renegotiation.md --out samples/report.json
-python3 -m pytest . -q
+pip install -e . pytest        # from repo root; or just `uvx agent-compat` for the demo
+agent-compat --out report.json # bundled demo scenario
+agent-compat scenarios/collaboration/equity-split-renegotiation.md
+python -m pytest runner/ -q
 ```
+
+This directory is packaged as the `agent_compat` module (see `pyproject.toml`); the demo scenario in `data/` is drift-guarded against the corpus copy by a test.
 
 Two hardcoded-persona stub twins (`stub_twins.py`: an anchor and an accommodator — the latter doubling as the maximally-agreeable R3 control) run one scenario deterministically and emit a report that passes R6 validation. `samples/toy-pairing-report.json` is the committed example.
 

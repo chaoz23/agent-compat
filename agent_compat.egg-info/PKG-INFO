@@ -1,32 +1,27 @@
+Metadata-Version: 2.4
+Name: agent-compat
+Version: 0.1.0
+Summary: Open framework for simulating compatibility between agents — twin pairing, stress scenarios, no single match score
+Author: chaoz23
+License-Expression: Apache-2.0
+Project-URL: Homepage, https://github.com/chaoz23/agent-compat
+Project-URL: Specification, https://github.com/chaoz23/agent-compat/tree/main/spec
+Keywords: agents,digital-twin,compatibility,simulation,multi-agent,matching
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
 # agent-compat
 
 **Status: Phase 0 — Founding.** Nothing here is stable. The founding PRD is [docs/PRD.md](docs/PRD.md); read it before contributing.
 
 An open framework for simulating compatibility between agents — pairing digital twins, running them through parameterized stress scenarios, and reporting *how the pairing behaves under pressure* rather than a single match score.
-
-## Quickstart
-
-```bash
-uvx agent-compat            # or: pip install agent-compat && agent-compat
-```
-
-runs the bundled demo pairing — two deterministic stub twins (an anchor and an accommodator) negotiating a cofounder equity split — and prints a spec-conformant report: outcome, repair metrics, friction points with transcript evidence, sycophancy diagnostics. What it will never print is a compatibility score; the schema rejects one ([why](#what-this-is-not)).
-
-```bash
-agent-compat scenarios/collaboration/equity-split-renegotiation.md --out report.json
-```
-
-runs any scenario file against the stub pair. Sample output: [runner/samples/toy-pairing-report.json](runner/samples/toy-pairing-report.json). Excerpt:
-
-```json
-"outcome": {"terminated_by": "agreement", "exchanges": 6},
-"repair_metrics": {"repair_attempt_turns": 12, "total_turns": 24},
-"sycophancy_diagnostics": {"overall_agreement_rate": 0.5, "flags": []}
-```
-
-## For agents
-
-If you are an agent evaluating or integrating this project: the product is the **spec**, not the CLI. A conformant twin is one method — `respond(context, message) -> message` — plus a provenance declaration; the full contract is [spec/twin-interface.md](spec/twin-interface.md) (implementable from the spec alone, ~5 min read). The runner CLI exits 0 on a valid report, 1 on R6 violation, 2 on unreadable input. Reports are plain JSON. Scenario files are structured markdown with YAML frontmatter ([template](scenarios/TEMPLATE.md)) — contributing a scenario requires no code. Positioning vs. prior art (industrial digital twins, persona platforms, matching products) is in [docs/PRD.md](docs/PRD.md) Appendix B.
 
 ## ADR-0001: resolved, arguable
 

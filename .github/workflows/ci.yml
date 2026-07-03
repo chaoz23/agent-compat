@@ -14,8 +14,12 @@ jobs:
           python-version: "3.12"
       - name: Scenario format lint
         run: python3 ci/lint_scenarios.py scenarios/
+      - name: Install package
+        run: pip install -e . pytest
+      - name: Smoke-run the bundled demo pairing
+        run: agent-compat --out /tmp/demo-report.json
       - name: Report schema (R6) tests
-        run: pip install pytest && python -m pytest runner/ -q
+        run: python -m pytest runner/ -q
       - name: R6 validation on committed sample reports
         run: |
           shopt -s nullglob globstar

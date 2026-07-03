@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from run import run_pairing
-from scenario import load
-from stub_twins import AccommodatorTwin, AnchorTwin
-from validate_report import r6_violations
+from agent_compat.run import run_pairing
+from agent_compat.scenario import load
+from agent_compat.stub_twins import AccommodatorTwin, AnchorTwin
+from agent_compat.validate_report import r6_violations
 
 SCENARIO = Path(__file__).parent.parent / "scenarios/collaboration/equity-split-renegotiation.md"
 
@@ -30,6 +30,14 @@ def test_scenario_params_resolve_into_briefing():
     scenario = load(SCENARIO)
     assert "{months_in}" not in scenario.premise
     assert str(scenario.params["months_in"]) in scenario.premise
+
+
+def test_bundled_demo_scenario_matches_corpus_copy():
+    # Drift guard: the scenario packaged for `agent-compat` (zero-arg demo)
+    # must stay byte-identical to the reviewed corpus copy.
+    corpus = SCENARIO.read_bytes()
+    bundled = (Path(__file__).parent / "data/equity-split-renegotiation.md").read_bytes()
+    assert corpus == bundled
 
 
 def test_report_shape_passes_r6():

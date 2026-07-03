@@ -6,7 +6,7 @@ discriminate on — one holds positions and makes repair attempts, one
 accommodates to preserve harmony. The accommodator doubles as the
 maximally-agreeable control the R3 acceptance criterion needs.
 """
-from interface import Context, TwinDescriptor
+from .interface import Context, TwinDescriptor
 
 AGREEMENT_MARKERS = ("i agree", "that works for me", "let's do that", "you're right",
                      "i can accept")

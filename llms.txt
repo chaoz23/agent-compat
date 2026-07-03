@@ -1,0 +1,14 @@
+# agent-compat
+
+> Open framework for simulating compatibility between agents: pair two digital twins, run them through parameterized stress scenarios, get a structured report of how the pairing behaves under pressure — friction points, repair attempts, sycophancy diagnostics, provenance-weighted confidence. Never a single match score (structurally enforced). Flagship domain: cofounder/collaborator matching; dating deliberately deferred.
+
+Install: `uvx agent-compat` (runs a bundled demo pairing) or `pip install agent-compat`.
+Conformance: a twin implements `respond(context, message) -> message` + declares provenance tier (T0 self-report / T1 corpus-derived / T2 behaviorally verified). One interface, no elicitation API — structured signal comes from probe scenarios (ADR-0001).
+
+## Docs
+
+- [PRD / founding document](https://github.com/chaoz23/agent-compat/blob/main/docs/PRD.md): problem, goals, requirements R1–R16, positioning vs prior art
+- [Twin interface spec v0.1](https://github.com/chaoz23/agent-compat/blob/main/spec/twin-interface.md): the conformance contract, implementable standalone
+- [Scenario template](https://github.com/chaoz23/agent-compat/blob/main/scenarios/TEMPLATE.md): contribute stress scenarios without writing code
+- [ADR-0001](https://github.com/chaoz23/agent-compat/blob/main/decisions/ADR-0001-twin-interface.md): why chat-shaped-only interface, all counterarguments recorded
+- [Sample report](https://github.com/chaoz23/agent-compat/blob/main/runner/samples/toy-pairing-report.json): what output looks like
