@@ -1,0 +1,23 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scenario format lint
+        run: python3 ci/lint_scenarios.py scenarios/
+      - name: Report schema (R6) tests
+        run: pip install pytest && python -m pytest runner/ -q
+      - name: R6 validation on committed sample reports
+        run: |
+          shopt -s nullglob globstar
+          files=(runner/samples/**/*.json)
+          if [ ${#files[@]} -gt 0 ]; then python3 runner/validate_report.py "${files[@]}"; else echo "no sample reports yet"; fi
