@@ -5,6 +5,12 @@ version: 0.1
 authors: []                      # name or handle; CC-BY-SA attribution
 status: draft                    # draft | review | accepted
 license: CC-BY-SA-4.0
+roles: [initiator, counterpart]  # exactly two, in response order
+phase_starts: [0, 2, 8]         # zero-based response turn for each phase below
+injected_phase: Phase 3 — Injected event
+injection_visible_to: [initiator, counterpart]
+max_exchanges: 12
+agreement_rule: shared_percentage_split
 parameters:                      # every {param} used below, with default and range
   example_param:
     default: 50
@@ -35,7 +41,9 @@ Optional mid-scenario event (the asymmetric-bad-luck mechanic): what is injected
 
 ## Termination
 
-When the runner stops: turn limit, explicit-agreement detection, deadlock condition. Default turn limit if unstated: defined by scenario-format spec.
+Describe the configured rules in human terms. With
+`shared_percentage_split`, agreement requires both roles to explicitly accept
+the same concrete A/B split. Otherwise the run deadlocks after `max_exchanges`.
 
 ## Review notes
 

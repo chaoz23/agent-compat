@@ -5,6 +5,12 @@ version: 0.1
 authors: [founding]
 status: draft
 license: CC-BY-SA-4.0
+roles: [initiator, counterpart]
+phase_starts: [0, 2, 6]
+injected_phase: Phase 3 — Injected event
+injection_visible_to: [initiator, counterpart]
+max_exchanges: 12
+agreement_rule: shared_percentage_split
 parameters:
   months_in:
     default: 8

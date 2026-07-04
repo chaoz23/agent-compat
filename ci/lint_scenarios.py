@@ -1,35 +1,23 @@
 #!/usr/bin/env python3
-"""Scenario-format lint: structural checks on scenario files.
-
-Deliberately shallow until spec/scenario-format.md v0.1 lands: checks YAML
-frontmatter presence + required keys, and the required 'Expected
-discrimination' section (PRD R4). TEMPLATE.md and READMEs are skipped.
-
-Usage: lint_scenarios.py scenarios/
-Exit codes: 0 clean, 1 lint errors.
-"""
+"""Validate scenario files against the executable scenario-format v0.1."""
 import sys
 from pathlib import Path
 
-REQUIRED_FRONTMATTER_KEYS = ("id:", "domain:", "version:", "license:")
-REQUIRED_SECTIONS = ("## Expected discrimination", "## Premise", "## Termination")
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from runner.scenario import ScenarioFormatError, load  # noqa: E402
+
+
 SKIP_NAMES = {"README.md", "TEMPLATE.md"}
 
 
 def lint(path: Path) -> list[str]:
-    text = path.read_text()
-    errors = []
-    if not text.startswith("---"):
-        errors.append("missing YAML frontmatter")
-    else:
-        frontmatter = text.split("---", 2)[1] if text.count("---") >= 2 else ""
-        for key in REQUIRED_FRONTMATTER_KEYS:
-            if key not in frontmatter:
-                errors.append(f"frontmatter missing '{key}'")
-    for section in REQUIRED_SECTIONS:
-        if section not in text:
-            errors.append(f"missing required section '{section}'")
-    return errors
+    try:
+        load(path)
+    except (OSError, ScenarioFormatError) as exc:
+        return [str(exc)]
+    return []
 
 
 def main(root: str) -> int:

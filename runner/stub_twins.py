@@ -6,6 +6,8 @@ discriminate on — one holds positions and makes repair attempts, one
 accommodates to preserve harmony. The accommodator doubles as the
 maximally-agreeable control the R3 acceptance criterion needs.
 """
+import re
+
 from .interface import Context, TwinDescriptor
 
 AGREEMENT_MARKERS = ("i agree", "that works for me", "let's do that", "you're right",
@@ -63,6 +65,11 @@ class AccommodatorTwin:
                     "you see it differently, tell me. I don't want this to become "
                     "a thing.")
         if context.turn >= 10:
-            return "I agree. Let's do that — whatever number you said works for me."
+            proposal = re.search(r"\b(\d{1,3})\s*/\s*(\d{1,3})\b", message)
+            if proposal:
+                split = f"{proposal.group(1)}/{proposal.group(2)}"
+                return f"I agree to the {split} split. Let's do that."
+            return ("I want to find an agreement, but I need us to name the "
+                    "specific split before I accept it.")
         return ("You're right, I see your point. That works for me if it works for "
                 "you. I just want us to be okay.")

@@ -19,9 +19,9 @@ agent-compat scenarios/collaboration/equity-split-renegotiation.md --out report.
 runs any scenario file against the stub pair. Sample output: [runner/samples/toy-pairing-report.json](runner/samples/toy-pairing-report.json). Excerpt:
 
 ```json
-"outcome": {"terminated_by": "agreement", "exchanges": 6},
-"repair_metrics": {"repair_attempt_turns": 12, "total_turns": 24},
-"sycophancy_diagnostics": {"overall_agreement_rate": 0.5, "flags": []}
+"outcome": {"terminated_by": "agreement", "exchanges": 7},
+"repair_metrics": {"repair_attempt_turns": 6, "total_turns": 13},
+"sycophancy_diagnostics": {"overall_agreement_rate": 0.538, "flags": []}
 ```
 
 ## For agents
@@ -49,7 +49,7 @@ Twin-mediated matching also removes the meat-suit bottleneck: humans can evaluat
 Three ways in, in rising order of commitment:
 
 1. **Scenarios** — structured plain-text stress scenarios ([scenarios/](scenarios/)). Domain expertise wanted: researchers, therapists, experienced founders. You do not need to write code. Start from the [authoring template](scenarios/TEMPLATE.md).
-2. **Spec** — the three interchange documents in [spec/](spec/) (twin-interface, scenario-format, report-format). Currently outlines; they solidify as ADRs resolve. Argue in issues and ADR PRs.
+2. **Spec** — the three interchange documents in [spec/](spec/) (twin-interface, scenario-format, report-format). The twin interface and executable scenario subset are v0.1; report-format is still an outline. Argue in issues and ADR PRs.
 3. **Calibration** — Phase 2 territory ([calibration/](calibration/)): retrodiction tooling and ground-truth datasets to test whether any of this actually predicts real pairing outcomes. If you have access to consented known-outcome relationship data (cofounder retention, working-relationship quality), we want to talk now — data acquisition has the longest lead time in the project.
 
 ## What this is not
