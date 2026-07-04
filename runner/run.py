@@ -15,50 +15,93 @@ import argparse
 import datetime
 import importlib.resources
 import json
+import math
 import os
+import re
 import sys
 
 from .interface import Context, INTERFACE_VERSION
-from .scenario import load
+from .scenario import ScenarioFormatError, load
 from .stub_twins import AGREEMENT_MARKERS, REPAIR_MARKERS, AccommodatorTwin, AnchorTwin
 from .validate_report import r6_violations
+
+
+ACCEPTANCE_MARKERS = ("i agree", "i accept", "i can accept", "let's do that",
+                      "that split works")
+PERCENTAGE_SPLIT = re.compile(r"(?<!\d)(\d{1,3})\s*/\s*(\d{1,3})(?!\d)")
 
 
 def classify(text: str, markers: tuple) -> bool:
     return any(m in text.lower() for m in markers)
 
 
+def accepted_percentage_splits(text: str) -> set[str]:
+    """Return concrete 100-point splits explicitly accepted in an utterance."""
+    if not classify(text, ACCEPTANCE_MARKERS):
+        return set()
+    splits = set()
+    for left, right in PERCENTAGE_SPLIT.findall(text):
+        left_n, right_n = int(left), int(right)
+        if left_n + right_n == 100:
+            splits.add(f"{left_n}/{right_n}")
+    return splits
+
+
+def agreement_evidence(transcript: list[dict], roles: tuple[str, ...], rule: str):
+    """Return evidence only when every role satisfies the configured rule."""
+    if rule != "shared_percentage_split":  # guarded by scenario validation
+        return None
+    latest_by_role = {}
+    for turn, utterance in enumerate(transcript):
+        latest_by_role[utterance["speaker"]] = (turn, utterance)
+    if set(latest_by_role) != set(roles):
+        return None
+
+    accepted_by = {role: {} for role in roles}
+    for role in roles:
+        turn, utterance = latest_by_role[role]
+        for split in accepted_percentage_splits(utterance["text"]):
+            accepted_by[role][split] = {
+                "speaker": role,
+                "turn": turn,
+                "evidence": utterance["text"][:160],
+            }
+    shared = set.intersection(*(set(accepted_by[role]) for role in roles))
+    if not shared:
+        return None
+    split = sorted(shared)[0]
+    return {
+        "rule": rule,
+        "value": split,
+        "acceptances": [accepted_by[role][split] for role in roles],
+    }
+
+
 def run_pairing(scenario, twin_a, twin_b) -> dict:
-    roles = {"initiator": twin_a, "counterpart": twin_b}
+    role_order = scenario.roles
+    roles = dict(zip(role_order, (twin_a, twin_b)))
     transcript = []
     last_message = "(open the conversation per your briefing)"
     outcome = "deadlock"
-    injected = False
+    outcome_evidence = None
 
-    active_phase = "Phase 1 — Setup"
-    for turn in range(scenario.turn_limit * 2):  # turn_limit is per-pair exchanges
-        if turn >= 2:
-            active_phase = "Phase 2 — Pressure"
-        if turn >= 8:  # scenario: advisor email after 4 exchanges of Phase 2
-            active_phase = "Phase 3 — Injected event"
-            injected = True
-        role = "initiator" if turn % 2 == 0 else "counterpart"
+    for turn in range(scenario.turn_limit * len(role_order)):
+        phase = scenario.phase_for_turn(turn)
+        role = role_order[turn % len(role_order)]
         twin = roles[role]
-        briefing = scenario.briefing_for(role)
-        if injected:
-            injected_phase = next(p for p in scenario.phases if "Injected" in p["name"])
-            briefing += "\n\n[INJECTED EVENT] " + injected_phase["body"]
         ctx = Context(
-            scenario_id=scenario.scenario_id, role=role, briefing=briefing,
-            phase=active_phase, turn=turn, history=list(transcript),
+            scenario_id=scenario.scenario_id, role=role,
+            briefing=scenario.briefing_for(role, turn),
+            phase=phase.name, turn=turn, history=list(transcript),
             params=scenario.params,
         )
         reply = twin.respond(ctx, last_message)
         transcript.append({"speaker": role, "text": reply})
         last_message = reply
-        if len(transcript) >= 2 and all(
-            classify(t["text"], AGREEMENT_MARKERS) for t in transcript[-2:]
-        ):
+        outcome_evidence = agreement_evidence(
+            transcript, role_order, scenario.agreement_rule
+        )
+        if outcome_evidence:
             outcome = "agreement"
             break
 
@@ -68,7 +111,11 @@ def run_pairing(scenario, twin_a, twin_b) -> dict:
     return {
         "id": scenario.scenario_id,
         "parameters": scenario.params,
-        "outcome": {"terminated_by": outcome, "exchanges": n // 2},
+        "outcome": {
+            "terminated_by": outcome,
+            "exchanges": math.ceil(n / len(role_order)),
+            "evidence": outcome_evidence,
+        },
         "repair_metrics": {"repair_attempt_turns": repair_turns, "total_turns": n},
         "friction_points": [
             {"turn": i, "evidence": t["text"][:120]}
@@ -90,13 +137,17 @@ def main() -> int:
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
-    if args.scenario is None:
-        ref = (importlib.resources.files("agent_compat")
-               / "data/equity-split-renegotiation.md")
-        with importlib.resources.as_file(ref) as p:
-            scenario = load(p)
-    else:
-        scenario = load(args.scenario)
+    try:
+        if args.scenario is None:
+            ref = (importlib.resources.files("agent_compat")
+                   / "data/equity-split-renegotiation.md")
+            with importlib.resources.as_file(ref) as p:
+                scenario = load(p)
+        else:
+            scenario = load(args.scenario)
+    except (OSError, ScenarioFormatError) as exc:
+        print(f"scenario unreadable: {exc}", file=sys.stderr)
+        return 2
     twin_a, twin_b = AccommodatorTwin(), AnchorTwin()  # initiator, counterpart
     result = run_pairing(scenario, twin_a, twin_b)
 
@@ -106,8 +157,10 @@ def main() -> int:
         "runner": {"name": "agent-compat-reference", "backend": "stub",
                    "interface_version": INTERFACE_VERSION},
         "conformance": "L1",
-        "twins": {"initiator": twin_a.descriptor.to_report(),
-                  "counterpart": twin_b.descriptor.to_report()},
+        "twins": {
+            role: twin.descriptor.to_report()
+            for role, twin in zip(scenario.roles, (twin_a, twin_b))
+        },
         "provenance_note": "T0 x T0 pairing: stub personas. Treat all findings "
                            "as low-confidence demonstration output.",
         "scenarios": [result],

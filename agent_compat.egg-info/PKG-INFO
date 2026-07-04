@@ -23,6 +23,30 @@ Dynamic: license-file
 
 An open framework for simulating compatibility between agents — pairing digital twins, running them through parameterized stress scenarios, and reporting *how the pairing behaves under pressure* rather than a single match score.
 
+## Quickstart
+
+```bash
+uvx agent-compat            # or: pip install agent-compat && agent-compat
+```
+
+runs the bundled demo pairing — two deterministic stub twins (an anchor and an accommodator) negotiating a cofounder equity split — and prints a spec-conformant report: outcome, repair metrics, friction points with transcript evidence, sycophancy diagnostics. What it will never print is a compatibility score; the schema rejects one ([why](#what-this-is-not)).
+
+```bash
+agent-compat scenarios/collaboration/equity-split-renegotiation.md --out report.json
+```
+
+runs any scenario file against the stub pair. Sample output: [runner/samples/toy-pairing-report.json](runner/samples/toy-pairing-report.json). Excerpt:
+
+```json
+"outcome": {"terminated_by": "agreement", "exchanges": 7},
+"repair_metrics": {"repair_attempt_turns": 6, "total_turns": 13},
+"sycophancy_diagnostics": {"overall_agreement_rate": 0.538, "flags": []}
+```
+
+## For agents
+
+If you are an agent evaluating or integrating this project: the product is the **spec**, not the CLI. A conformant twin is one method — `respond(context, message) -> message` — plus a provenance declaration; the full contract is [spec/twin-interface.md](spec/twin-interface.md) (implementable from the spec alone, ~5 min read). The runner CLI exits 0 on a valid report, 1 on R6 violation, 2 on unreadable input. Reports are plain JSON. Scenario files are structured markdown with YAML frontmatter ([template](scenarios/TEMPLATE.md)) — contributing a scenario requires no code. Positioning vs. prior art (industrial digital twins, persona platforms, matching products) is in [docs/PRD.md](docs/PRD.md) Appendix B.
+
 ## ADR-0001: resolved, arguable
 
 The founding design question — chat-shaped twin interface vs. structured elicitation — is decided: **one interface (`respond(context, message) -> message`), structured signal via probe scenarios, elicitation reserved behind a provenance-tagged annex.** All positions, the deciding objection, and the specific evidence that would reopen it are in [decisions/ADR-0001-twin-interface.md](decisions/ADR-0001-twin-interface.md). If you build twin platforms and this floor is wrong for you, open an issue — that is exactly the feedback a v0.1 spec needs.
@@ -44,7 +68,7 @@ Twin-mediated matching also removes the meat-suit bottleneck: humans can evaluat
 Three ways in, in rising order of commitment:
 
 1. **Scenarios** — structured plain-text stress scenarios ([scenarios/](scenarios/)). Domain expertise wanted: researchers, therapists, experienced founders. You do not need to write code. Start from the [authoring template](scenarios/TEMPLATE.md).
-2. **Spec** — the three interchange documents in [spec/](spec/) (twin-interface, scenario-format, report-format). Currently outlines; they solidify as ADRs resolve. Argue in issues and ADR PRs.
+2. **Spec** — the three interchange documents in [spec/](spec/) (twin-interface, scenario-format, report-format). The twin interface and executable scenario subset are v0.1; report-format is still an outline. Argue in issues and ADR PRs.
 3. **Calibration** — Phase 2 territory ([calibration/](calibration/)): retrodiction tooling and ground-truth datasets to test whether any of this actually predicts real pairing outcomes. If you have access to consented known-outcome relationship data (cofounder retention, working-relationship quality), we want to talk now — data acquisition has the longest lead time in the project.
 
 ## What this is not

@@ -8,7 +8,11 @@ Copy [scenarios/TEMPLATE.md](scenarios/TEMPLATE.md), write a stress scenario for
 
 ## 2. Spec
 
-The three interchange documents in [spec/](spec/). twin-interface is v0.1; scenario-format and report-format are outlines hardening now — this is the highest-leverage moment to shape them. Design arguments happen in ADR PRs against [decisions/](decisions/); read ADR-0001 for the house style (all positions recorded, including losing ones, plus the evidence that would reopen).
+The three interchange documents in [spec/](spec/). twin-interface and the
+executable scenario-format subset are v0.1; report-format remains an outline
+hardening now. Design arguments happen in ADR PRs against
+[decisions/](decisions/); read ADR-0001 for the house style (all positions
+recorded, including losing ones, plus the evidence that would reopen).
 
 ## 3. Runner and metrics
 

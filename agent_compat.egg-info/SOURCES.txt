@@ -12,6 +12,7 @@ runner/run.py
 runner/scenario.py
 runner/stub_twins.py
 runner/test_run.py
+runner/test_scenario.py
 runner/test_validate_report.py
 runner/validate_report.py
 runner/data/equity-split-renegotiation.md
