@@ -9,7 +9,7 @@ description = "Open framework for simulating compatibility between agents — tw
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
-authors = [{ name = "chaoz23" }]
+authors = [{ name = "Daniel Strader (chaoz23)", email = "chaoz23@gmail.com" }]
 keywords = ["agents", "digital-twin", "compatibility", "simulation", "multi-agent", "matching"]
 classifiers = [
     "Development Status :: 3 - Alpha",
