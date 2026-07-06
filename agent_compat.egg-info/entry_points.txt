@@ -1,2 +1,0 @@
-[console_scripts]
-agent-compat = agent_compat.run:main
