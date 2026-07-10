@@ -44,3 +44,18 @@ def test_report_shape_passes_r6():
     result = run_pairing(load(SCENARIO), AccommodatorTwin(), AnchorTwin())
     report = {"spec_version": "0.1", "scenarios": [result]}
     assert not r6_violations(report)
+
+
+def test_out_to_unwritable_path_exits_2_without_traceback(tmp_path, monkeypatch, capsys):
+    # Regression (issue #2): --out under an unwritable/invalid path must produce
+    # a clean stderr error and exit 2, never an unhandled OSError traceback.
+    from agent_compat.run import main
+
+    blocker = tmp_path / "afile"          # a file used as a directory component
+    blocker.write_text("x")
+    bad_out = blocker / "sub" / "report.json"
+    monkeypatch.setattr("sys.argv", ["agent-compat", "--out", str(bad_out)])
+
+    rc = main()                            # must NOT raise
+    assert rc == 2
+    assert "cannot write report" in capsys.readouterr().err
