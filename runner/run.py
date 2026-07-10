@@ -176,10 +176,14 @@ def main() -> int:
         print(v, file=sys.stderr)
     out = json.dumps(report, indent=2)
     if args.out:
-        if os.path.dirname(args.out):
-            os.makedirs(os.path.dirname(args.out), exist_ok=True)
-        with open(args.out, "w") as f:
-            f.write(out + "\n")
+        try:
+            if os.path.dirname(args.out):
+                os.makedirs(os.path.dirname(args.out), exist_ok=True)
+            with open(args.out, "w") as f:
+                f.write(out + "\n")
+        except OSError as exc:
+            print(f"cannot write report to {args.out}: {exc}", file=sys.stderr)
+            return 2
         print(f"report written to {args.out} "
               f"({'INVALID' if violations else 'passes R6'})")
     else:
