@@ -1,0 +1,56 @@
+{
+  "name": "agent_compat",
+  "description": "Run deterministic Phase 0 compatibility simulations between stub digital twins and emit a spec-conformant report with outcomes, repair metrics, friction evidence, transcripts, and sycophancy diagnostics. The project is spec-first; this CLI is the reference runner, not a matching score.",
+  "status": "phase-0; founding spec and runner are intentionally unstable",
+  "invocation": {
+    "command": "agent-compat [scenario.md] [--out report.json]",
+    "zero_install": "uvx agent-compat",
+    "from_clone": "python -m agent_compat.run [scenario.md] [--out report.json]",
+    "default_scenario": "bundled collaboration/equity-split-renegotiation demo",
+    "exit_codes": {
+      "0": "report produced and passes the enforced R6 no-single-score validation",
+      "1": "report produced but violates R6 validation",
+      "2": "scenario input is unreadable/invalid or the report cannot be written"
+    }
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "scenario": {
+        "type": "string",
+        "description": "Optional path to a structured markdown scenario file. Omit to run the bundled demo."
+      },
+      "out": {
+        "type": "string",
+        "description": "Optional path for the JSON report. Omit to print the report to stdout."
+      }
+    },
+    "additionalProperties": false
+  },
+  "output_contract": {
+    "format": "JSON report",
+    "stdout": "When --out is omitted, stdout is the full report JSON.",
+    "report_keys": [
+      "spec_version",
+      "generated_at",
+      "runner",
+      "conformance",
+      "twins",
+      "provenance_note",
+      "scenarios",
+      "sycophancy_diagnostics"
+    ],
+    "normative_rule": "Reports must not contain a top-level scalar compatibility score, match score, rating, grade, or verdict."
+  },
+  "specs": {
+    "twin_interface": "spec/twin-interface.md",
+    "scenario_format": "spec/scenario-format.md",
+    "report_format": "spec/report-format.md",
+    "scenario_template": "scenarios/TEMPLATE.md",
+    "sample_report": "runner/samples/toy-pairing-report.json"
+  },
+  "audience_notes": {
+    "agents": "Start here for command shape and exit-code semantics, then read the linked specs. Do not infer or invent a single compatibility score.",
+    "humans": "Start with README.md and docs/PRD.md for product scope, contribution surfaces, and the Phase 0 wedge."
+  }
+}

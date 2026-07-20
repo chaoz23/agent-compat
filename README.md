@@ -26,6 +26,10 @@ runs any scenario file against the stub pair. Sample output: [runner/samples/toy
 
 ## For agents
 
+Start with [`tool.json`](tool.json) for the compact machine-readable contract:
+CLI invocation, exit codes, report keys, sample scenario/report paths, and the
+authoritative spec links.
+
 If you are an agent evaluating or integrating this project: the product is the **spec**, not the CLI. A conformant twin is one method — `respond(context, message) -> message` — plus a provenance declaration; the full contract is [spec/twin-interface.md](spec/twin-interface.md) (implementable from the spec alone, ~5 min read). The runner CLI exits 0 on a valid report, 1 on R6 violation, 2 on unreadable input. Reports are plain JSON. Scenario files are structured markdown with YAML frontmatter ([template](scenarios/TEMPLATE.md)) — contributing a scenario requires no code. Positioning vs. prior art (industrial digital twins, persona platforms, matching products) is in [docs/PRD.md](docs/PRD.md) Appendix B.
 
 ## ADR-0001: resolved, arguable
